@@ -70,6 +70,14 @@ create table products
     foreign key (category_id) references categories (id)
 );
 
+create table product_images
+(
+    id          int primary key auto_increment,
+    product_id  int,
+    foreign key (product_id) references products (id),
+    image_url   varchar(300) default ''
+);
+
 create table orders
 (
     id               int primary key auto_increment,
