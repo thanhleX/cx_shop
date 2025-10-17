@@ -100,6 +100,9 @@ create table orders
 );
 
 alter table orders
+    modify column phone_number nvarchar(10);
+
+alter table orders
     modify column status enum ('pending', 'processing', 'shipped', 'delivered', 'canceled')
         comment 'Trạng thái đơn hàng';
 
