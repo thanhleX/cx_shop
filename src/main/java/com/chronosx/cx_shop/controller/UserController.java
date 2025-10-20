@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.chronosx.cx_shop.dtos.SetLoginDto;
 import com.chronosx.cx_shop.dtos.UserDto;
+import com.chronosx.cx_shop.models.User;
 import com.chronosx.cx_shop.services.UserService;
 
 import lombok.AccessLevel;
@@ -40,8 +41,8 @@ public class UserController {
             if (!userDto.getPassword().equals(userDto.getRetypePassword())) {
                 return ResponseEntity.badRequest().body("Passwords do not match");
             }
-            userService.createUser(userDto);
-            return ResponseEntity.ok("User created");
+            User user = userService.createUser(userDto);
+            return ResponseEntity.ok(user);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -49,7 +50,11 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@Valid @RequestBody SetLoginDto userLoginDto) {
-        String token = userService.login(userLoginDto.getPhoneNumber(), userLoginDto.getPassword());
-        return ResponseEntity.ok(token);
+        try {
+            String token = userService.login(userLoginDto.getPhoneNumber(), userLoginDto.getPassword());
+            return ResponseEntity.ok(token);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
