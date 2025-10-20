@@ -1,10 +1,18 @@
 package com.chronosx.cx_shop.services.implement;
 
+import java.util.Optional;
+
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.chronosx.cx_shop.components.JwtTokenUtil;
 import com.chronosx.cx_shop.dtos.UserDto;
 import com.chronosx.cx_shop.exceptions.DataNotFoundException;
+import com.chronosx.cx_shop.exceptions.PermissionDenyException;
 import com.chronosx.cx_shop.models.Role;
 import com.chronosx.cx_shop.models.User;
 import com.chronosx.cx_shop.repositories.RoleRepository;
@@ -23,12 +31,23 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
     RoleRepository roleRepository;
 
+    PasswordEncoder passwordEncoder;
+    JwtTokenUtil jwtTokenUtil;
+    AuthenticationManager authenticationManager;
+
     @Override
-    public User createUser(UserDto userDto) throws DataNotFoundException {
+    public User createUser(UserDto userDto) throws Exception {
         String phoneNumber = userDto.getPhoneNumber();
         if (userRepository.existsByPhoneNumber(phoneNumber))
             throw new DataIntegrityViolationException("phone number already exists");
 
+        Role role = roleRepository
+                .findById(userDto.getRoleId())
+                .orElseThrow(() -> new DataNotFoundException("role not found"));
+
+        if (role.getName().toUpperCase().equals(Role.ADMIN)) {
+            throw new PermissionDenyException("cannot create admin account");
+        }
         User newUser = User.builder()
                 .fullName(userDto.getFullName())
                 .phoneNumber(userDto.getPhoneNumber())
@@ -38,19 +57,34 @@ public class UserServiceImpl implements UserService {
                 .facebookAccountId(userDto.getFacebookAccountId())
                 .googleAccountId(userDto.getGoogleAccountId())
                 .build();
-        Role role = roleRepository
-                .findById(userDto.getRoleId())
-                .orElseThrow(() -> new DataNotFoundException("role not found"));
+
         newUser.setRole(role);
         if (userDto.getFacebookAccountId() == 0 && userDto.getGoogleAccountId() == 0) {
             String password = userDto.getPassword();
-            newUser.setPassword(password);
+            String encodePassword = passwordEncoder.encode(password);
+            newUser.setPassword(encodePassword);
         }
         return userRepository.save(newUser);
     }
 
     @Override
-    public String login(String phoneNumber, String password) {
-        return null;
+    public String login(String phoneNumber, String password) throws Exception {
+        Optional<User> user = userRepository.findByPhoneNumber(phoneNumber);
+        if (user.isEmpty()) {
+            throw new DataNotFoundException("invalid input");
+        }
+
+        User existingUser = user.get();
+        if (existingUser.getFacebookAccountId() == 0 && existingUser.getGoogleAccountId() == 0) {
+            if (!passwordEncoder.matches(password, existingUser.getPassword())) {
+                throw new BadCredentialsException("invalid input");
+            }
+        }
+        UsernamePasswordAuthenticationToken authToken =
+                new UsernamePasswordAuthenticationToken(phoneNumber, password, existingUser.getAuthorities());
+
+        // authenticate with Java Spring Security
+        authenticationManager.authenticate(authToken);
+        return jwtTokenUtil.generateToken(existingUser);
     }
 }
