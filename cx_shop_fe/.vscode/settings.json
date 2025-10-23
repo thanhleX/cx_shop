@@ -1,0 +1,6 @@
+{
+    "css.styleSheets": [
+        "**/${fileBasenameNoExtension}.scss",
+        "node_modules/bootstrap/dist/css/bootstrap.min.css"
+    ]
+}
