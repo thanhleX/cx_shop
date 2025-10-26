@@ -27,13 +27,6 @@ export class UserService {
   }
 
   login(loginDto: LoginDto): Observable<any> {
-    // tra ve token dang json
-    // return this.http.post(this.apiLogin, loginDto, this.apiConfig);
-
-    // tra ve token dang string
-    return this.http.post(this.apiLogin, loginDto, {
-      headers: this.createHeader(),
-      responseType: 'text'
-    });
+    return this.http.post(this.apiLogin, loginDto, this.apiConfig);
   }
 }
