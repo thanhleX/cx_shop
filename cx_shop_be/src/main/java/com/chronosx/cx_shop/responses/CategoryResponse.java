@@ -1,4 +1,4 @@
-package com.chronosx.cx_shop.dtos.responses;
+package com.chronosx.cx_shop.responses;
 
 import java.util.List;
 

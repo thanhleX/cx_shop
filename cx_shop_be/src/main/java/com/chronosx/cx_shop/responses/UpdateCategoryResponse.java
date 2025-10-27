@@ -1,4 +1,4 @@
-package com.chronosx.cx_shop.dtos.responses;
+package com.chronosx.cx_shop.responses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -12,10 +12,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class LoginResponse {
+public class UpdateCategoryResponse {
     @JsonProperty("message")
     String message;
-
-    @JsonProperty("token")
-    String token;
 }

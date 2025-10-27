@@ -5,12 +5,10 @@ import java.util.Date;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.chronosx.cx_shop.dtos.OrderDto;
-import com.chronosx.cx_shop.dtos.responses.OrderResponse;
+import com.chronosx.cx_shop.responses.OrderResponse;
 import com.chronosx.cx_shop.exceptions.DataNotFoundException;
 import com.chronosx.cx_shop.models.Order;
 import com.chronosx.cx_shop.models.OrderStatus;

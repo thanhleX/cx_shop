@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.chronosx.cx_shop.components.LocalizationUtils;
 import com.chronosx.cx_shop.dtos.OrderDetailDto;
-import com.chronosx.cx_shop.dtos.responses.OrderDetailResponse;
+import com.chronosx.cx_shop.responses.OrderDetailResponse;
 import com.chronosx.cx_shop.exceptions.DataNotFoundException;
 import com.chronosx.cx_shop.models.OrderDetail;
 import com.chronosx.cx_shop.services.OrderDetailService;

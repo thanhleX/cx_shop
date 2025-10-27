@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import com.chronosx.cx_shop.components.LocalizationUtils;
 import com.chronosx.cx_shop.dtos.CategoryDto;
-import com.chronosx.cx_shop.dtos.responses.CategoryResponse;
-import com.chronosx.cx_shop.dtos.responses.UpdateCategoryResponse;
+import com.chronosx.cx_shop.responses.CategoryResponse;
+import com.chronosx.cx_shop.responses.UpdateCategoryResponse;
 import com.chronosx.cx_shop.models.Category;
 import com.chronosx.cx_shop.services.CategoryService;
 import com.chronosx.cx_shop.utils.MessageKeys;

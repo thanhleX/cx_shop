@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.chronosx.cx_shop.components.LocalizationUtils;
 import com.chronosx.cx_shop.dtos.OrderDto;
-import com.chronosx.cx_shop.dtos.responses.OrderResponse;
+import com.chronosx.cx_shop.responses.OrderResponse;
 import com.chronosx.cx_shop.services.OrderService;
 
 import lombok.AccessLevel;

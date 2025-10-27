@@ -5,7 +5,7 @@ import org.springframework.data.domain.PageRequest;
 
 import com.chronosx.cx_shop.dtos.ProductDto;
 import com.chronosx.cx_shop.dtos.ProductImageDto;
-import com.chronosx.cx_shop.dtos.responses.ProductResponse;
+import com.chronosx.cx_shop.responses.ProductResponse;
 import com.chronosx.cx_shop.exceptions.DataNotFoundException;
 import com.chronosx.cx_shop.models.Product;
 import com.chronosx.cx_shop.models.ProductImage;
