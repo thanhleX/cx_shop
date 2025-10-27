@@ -18,7 +18,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.chronosx.cx_shop.components.JwtTokenUtil;
+import com.chronosx.cx_shop.components.JwtTokenUtils;
 import com.chronosx.cx_shop.models.User;
 
 import lombok.AccessLevel;
@@ -38,7 +38,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     UserDetailsService userDetailsService;
 
-    JwtTokenUtil jwtTokenUtil;
+    JwtTokenUtils jwtTokenUtils;
 
     @Override
     protected void doFilterInternal(
@@ -59,10 +59,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             }
 
             final String token = authHeader.substring(7);
-            final String phoneNUmber = jwtTokenUtil.extractPhoneNumberFromToken(token);
+            final String phoneNUmber = jwtTokenUtils.extractPhoneNumberFromToken(token);
             if (phoneNUmber != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 User userDetails = (User) userDetailsService.loadUserByUsername(phoneNUmber);
-                if (jwtTokenUtil.validateToken(token, userDetails)) {
+                if (jwtTokenUtils.validateToken(token, userDetails)) {
                     UsernamePasswordAuthenticationToken authenticationToken =
                             new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

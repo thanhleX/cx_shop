@@ -25,7 +25,7 @@ import lombok.experimental.FieldDefaults;
 @Component
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class JwtTokenUtil {
+public class JwtTokenUtils {
 
     @Value("${jwt.expiration}")
     int expiration;

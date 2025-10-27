@@ -9,7 +9,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.chronosx.cx_shop.components.JwtTokenUtil;
+import com.chronosx.cx_shop.components.JwtTokenUtils;
 import com.chronosx.cx_shop.dtos.UserDto;
 import com.chronosx.cx_shop.exceptions.DataNotFoundException;
 import com.chronosx.cx_shop.exceptions.PermissionDenyException;
@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
     RoleRepository roleRepository;
 
     PasswordEncoder passwordEncoder;
-    JwtTokenUtil jwtTokenUtil;
+    JwtTokenUtils jwtTokenUtils;
     AuthenticationManager authenticationManager;
 
     @Override
@@ -85,6 +85,6 @@ public class UserServiceImpl implements UserService {
 
         // authenticate with Java Spring Security
         authenticationManager.authenticate(authToken);
-        return jwtTokenUtil.generateToken(existingUser);
+        return jwtTokenUtils.generateToken(existingUser);
     }
 }
