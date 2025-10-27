@@ -2,7 +2,10 @@ package com.chronosx.cx_shop.dtos.responses;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
+import com.chronosx.cx_shop.models.Order;
+import com.chronosx.cx_shop.models.OrderDetail;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.*;
@@ -27,6 +30,7 @@ public class OrderResponse extends BaseResponse {
     @JsonProperty("phone_number")
     String phoneNumber;
 
+    String email;
     String address;
     String note;
 
@@ -55,4 +59,29 @@ public class OrderResponse extends BaseResponse {
 
     @JsonProperty("is_active")
     Boolean isActive;
+
+    @JsonProperty("order_details")
+    List<OrderDetail> orderDetails;
+
+    public static OrderResponse fromOrder(Order order) {
+        OrderResponse orderResponse =  OrderResponse
+                .builder()
+                .id(order.getId())
+                .userId(order.getId())
+                .fullName(order.getFullName())
+                .phoneNumber(order.getPhoneNumber())
+                .email(order.getEmail())
+                .address(order.getAddress())
+                .note(order.getNote())
+                .orderDate(order.getOrderDate())
+                .status(order.getStatus())
+                .totalMoney(order.getTotalMoney())
+                .shippingMethod(order.getShippingMethod())
+                .shippingAddress(order.getShippingAddress())
+                .shippingDate(order.getShippingDate())
+                .paymentMethod(order.getPaymentMethod())
+                .orderDetails(order.getOrderDetails())
+                .build();
+        return orderResponse;
+    }
 }

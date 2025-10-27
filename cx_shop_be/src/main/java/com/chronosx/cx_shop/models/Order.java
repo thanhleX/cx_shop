@@ -2,7 +2,9 @@ package com.chronosx.cx_shop.models;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import lombok.*;
@@ -72,4 +74,8 @@ public class Order {
 
     @Column(name = "is_active")
     Boolean isActive;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<OrderDetail> orderDetails;
 }

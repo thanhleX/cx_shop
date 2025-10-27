@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.chronosx.cx_shop.dtos.OrderDto;
@@ -28,6 +30,7 @@ public class OrderServiceImpl implements OrderService {
 
     OrderRepository orderRepository;
     UserRepository userRepository;
+
     ModelMapper modelMapper;
 
     @Override
@@ -56,20 +59,39 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderResponse getOrderById(Long id) {
-        return null;
+    public Order getOrderById(Long id) {
+        return orderRepository.findById(id).orElse(null);
     }
 
     @Override
-    public OrderResponse updateOrder(Long id, OrderDto orderDto) {
-        return null;
+    public Order updateOrder(Long id, OrderDto orderDto) throws DataNotFoundException {
+        Order order = orderRepository
+                .findById(id)
+                .orElseThrow(() -> new DataNotFoundException("Cannot find order with id: " + id));
+
+        User existingUser = userRepository
+                .findById(orderDto.getUserId())
+                .orElseThrow(() -> new DataNotFoundException("Cannot find user with id: " + id));
+
+        modelMapper.typeMap(OrderDto.class, Order.class).addMappings(mapper -> mapper.skip(Order::setId));
+
+        modelMapper.map(orderDto, order);
+        order.setUser(existingUser);
+
+        return orderRepository.save(order);
     }
 
     @Override
-    public void deleteOrder(Long id) {}
+    public void deleteOrder(Long id) {
+        Order order = orderRepository.findById(id).orElse(null);
+        if (order != null) {
+            order.setIsActive(false);
+            orderRepository.save(order);
+        }
+    }
 
     @Override
-    public List<OrderResponse> getAllOrders() {
-        return List.of();
+    public List<Order> getAllOrdersByUserId(Long userId) {
+        return orderRepository.findByUserId(userId);
     }
 }

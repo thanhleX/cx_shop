@@ -2,18 +2,22 @@ package com.chronosx.cx_shop.services;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.chronosx.cx_shop.dtos.OrderDto;
 import com.chronosx.cx_shop.dtos.responses.OrderResponse;
 import com.chronosx.cx_shop.exceptions.DataNotFoundException;
+import com.chronosx.cx_shop.models.Order;
 
 public interface OrderService {
     OrderResponse createOrder(OrderDto orderDto) throws DataNotFoundException;
 
-    OrderResponse getOrderById(Long id);
+    Order getOrderById(Long id);
 
-    OrderResponse updateOrder(Long id, OrderDto orderDto);
+    Order updateOrder(Long id, OrderDto orderDto) throws DataNotFoundException;
 
     void deleteOrder(Long id);
 
-    List<OrderResponse> getAllOrders();
+    List<Order> getAllOrdersByUserId(Long userId);
 }

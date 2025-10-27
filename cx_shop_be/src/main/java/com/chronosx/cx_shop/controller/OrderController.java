@@ -2,6 +2,8 @@ package com.chronosx.cx_shop.controller;
 
 import java.util.List;
 
+import com.chronosx.cx_shop.models.Order;
+import com.chronosx.cx_shop.utils.MessageKeys;
 import jakarta.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -9,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import com.chronosx.cx_shop.components.LocalizationUtils;
 import com.chronosx.cx_shop.dtos.OrderDto;
 import com.chronosx.cx_shop.dtos.responses.OrderResponse;
 import com.chronosx.cx_shop.services.OrderService;
@@ -24,6 +27,8 @@ import lombok.experimental.FieldDefaults;
 public class OrderController {
 
     OrderService orderService;
+
+    LocalizationUtils localizationUtils;
 
     @PostMapping("")
     public ResponseEntity<?> createOrder(@Valid @RequestBody OrderDto orderDto, BindingResult result) {
@@ -44,7 +49,8 @@ public class OrderController {
     @GetMapping("/{user_id}")
     public ResponseEntity<?> getOrdersByUser(@Valid @PathVariable("user_id") Long userId) {
         try {
-            return ResponseEntity.ok("Orders for user " + userId);
+            List<Order> orders = orderService.getAllOrdersByUserId(userId);
+            return ResponseEntity.ok(orders);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -52,11 +58,18 @@ public class OrderController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateOrder(@Valid @PathVariable Long id, @Valid @RequestBody OrderDto orderDto) {
-        return ResponseEntity.ok("Order updated");
+        try {
+            Order existingOrder = orderService.getOrderById(id);
+            OrderResponse orderResponse = OrderResponse.fromOrder(existingOrder);
+            return ResponseEntity.ok(orderResponse);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteOrder(@Valid @PathVariable Long id) {
-        return ResponseEntity.ok("Order deleted");
+        orderService.deleteOrder(id);
+        return ResponseEntity.ok(localizationUtils.getLocalizedMessage(MessageKeys.DELETE_ORDER_SUCCESSFULLY.getKey(), id));
     }
 }
