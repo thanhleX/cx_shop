@@ -7,11 +7,13 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.chronosx.cx_shop.components.LocalizationUtils;
 import com.chronosx.cx_shop.dtos.OrderDetailDto;
 import com.chronosx.cx_shop.dtos.responses.OrderDetailResponse;
 import com.chronosx.cx_shop.exceptions.DataNotFoundException;
 import com.chronosx.cx_shop.models.OrderDetail;
 import com.chronosx.cx_shop.services.OrderDetailService;
+import com.chronosx.cx_shop.utils.MessageKeys;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,8 @@ import lombok.experimental.FieldDefaults;
 public class OrderDetailController {
 
     OrderDetailService orderDetailService;
+
+    LocalizationUtils localizationUtils;
 
     @PostMapping
     public ResponseEntity<?> createOrderDetail(@Valid @RequestBody OrderDetailDto orderDetailDto) {
@@ -54,9 +58,8 @@ public class OrderDetailController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateOrderDetail(
             @Valid @PathVariable Long id, @RequestBody OrderDetailDto orderDetailDto) {
-        OrderDetail orderDetail = null;
         try {
-            orderDetail = orderDetailService.updateOrderDetail(id, orderDetailDto);
+            OrderDetail orderDetail = orderDetailService.updateOrderDetail(id, orderDetailDto);
             return ResponseEntity.ok(orderDetail);
         } catch (DataNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -66,6 +69,7 @@ public class OrderDetailController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteOrderDetail(@Valid @PathVariable Long id) {
         orderDetailService.deleteOrderDetail(id);
-        return ResponseEntity.ok().body("deleted order detail with id = " + id + " successfully");
+        return ResponseEntity.ok()
+                .body(localizationUtils.getLocalizedMessage(MessageKeys.DELETE_ORDER_DETAIL_SUCCESSFULLY.getKey(), id));
     }
 }

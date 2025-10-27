@@ -26,6 +26,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.chronosx.cx_shop.components.LocalizationUtils;
 import com.chronosx.cx_shop.dtos.ProductDto;
 import com.chronosx.cx_shop.dtos.ProductImageDto;
 import com.chronosx.cx_shop.dtos.responses.ProductListResponse;
@@ -34,6 +35,7 @@ import com.chronosx.cx_shop.exceptions.DataNotFoundException;
 import com.chronosx.cx_shop.models.Product;
 import com.chronosx.cx_shop.models.ProductImage;
 import com.chronosx.cx_shop.services.ProductService;
+import com.chronosx.cx_shop.utils.MessageKeys;
 import com.github.javafaker.Faker;
 
 import lombok.AccessLevel;
@@ -47,6 +49,8 @@ import lombok.experimental.FieldDefaults;
 public class ProductController {
 
     ProductService productService;
+
+    LocalizationUtils localizationUtils;
 
     @PostMapping("")
     public ResponseEntity<?> createProduct(@Valid @RequestBody ProductDto productDto, BindingResult result) {
@@ -74,7 +78,8 @@ public class ProductController {
             files = files == null ? new ArrayList<MultipartFile>() : files;
             if (files.size() > MAXIMUM_IMAGES_PER_PRODUCT) {
                 return ResponseEntity.badRequest()
-                        .body("you can only upload up to " + MAXIMUM_IMAGES_PER_PRODUCT + " images");
+                        .body(localizationUtils.getLocalizedMessage(
+                                MessageKeys.UPLOAD_IMAGES_ERROR_MAX_5_IMAGES.getKey()));
             }
             List<ProductImage> productImages = new ArrayList<>();
             for (MultipartFile file : files) {
@@ -82,13 +87,14 @@ public class ProductController {
 
                 if (file.getSize() > 10 * 1024 * 1024) { // 10 MB
                     return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)
-                            .body("File is too large! Max size is 10 MB");
+                            .body(localizationUtils.getLocalizedMessage(MessageKeys.UPLOAD_IMAGES_FILE_LARGE.getKey()));
                 }
 
                 String contentType = file.getContentType();
                 if (contentType == null || !contentType.startsWith("image/")) {
                     return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
-                            .body("File must be an image");
+                            .body(localizationUtils.getLocalizedMessage(
+                                    MessageKeys.UPLOAD_IMAGES_FILE_MUST_BE_IMAGE.getKey()));
                 }
                 // luu file va cap nhap thumbnail trong dto
                 String filename = storeFile(file);
@@ -103,7 +109,7 @@ public class ProductController {
         }
     }
 
-    private String storeFile(MultipartFile file) throws IOException {
+    String storeFile(MultipartFile file) throws IOException {
         if (!isImageFile(file) || file.getOriginalFilename() == null) {
             throw new IOException("Invalid image format");
         }
@@ -170,7 +176,7 @@ public class ProductController {
     public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
         try {
             productService.deleteProduct(id);
-            return ResponseEntity.ok("deleted product with id " + id);
+            return ResponseEntity.ok(localizationUtils.getLocalizedMessage(MessageKeys.DELETE_PRODUCT_SUCCESSFULLY.getKey(), id));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

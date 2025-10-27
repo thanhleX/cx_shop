@@ -12,10 +12,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.chronosx.cx_shop.components.LocalizationUtils;
 import com.chronosx.cx_shop.dtos.SetLoginDto;
 import com.chronosx.cx_shop.dtos.UserDto;
+import com.chronosx.cx_shop.dtos.responses.LoginResponse;
+import com.chronosx.cx_shop.dtos.responses.RegisterResponse;
 import com.chronosx.cx_shop.models.User;
 import com.chronosx.cx_shop.services.UserService;
+import com.chronosx.cx_shop.utils.MessageKeys;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -29,32 +33,51 @@ public class UserController {
 
     UserService userService;
 
+    LocalizationUtils localizationUtils;
+
     @PostMapping("/register")
-    public ResponseEntity<?> createUser(@Valid @RequestBody UserDto userDto, BindingResult result) {
+    public ResponseEntity<RegisterResponse> createUser(@Valid @RequestBody UserDto userDto, BindingResult result) {
+        RegisterResponse registerResponse = new RegisterResponse();
+        if (result.hasErrors()) {
+            List<String> errorMessages = result.getFieldErrors().stream()
+                    .map(FieldError::getDefaultMessage)
+                    .toList();
+
+            registerResponse.setMessage(errorMessages.toString());
+            return ResponseEntity.badRequest().body(registerResponse);
+        }
+
+        if (!userDto.getPassword().equals(userDto.getRetypePassword())) {
+            registerResponse.setMessage(localizationUtils.getLocalizedMessage(MessageKeys.PASSWORD_NOT_MATCH.getKey()));
+            return ResponseEntity.badRequest().body(registerResponse);
+        }
+
         try {
-            if (result.hasErrors()) {
-                List<String> errorMessages = result.getFieldErrors().stream()
-                        .map(FieldError::getDefaultMessage)
-                        .toList();
-                return ResponseEntity.badRequest().body(errorMessages);
-            }
-            if (!userDto.getPassword().equals(userDto.getRetypePassword())) {
-                return ResponseEntity.badRequest().body("Passwords do not match");
-            }
             User user = userService.createUser(userDto);
-            return ResponseEntity.ok(user);
+            registerResponse.setMessage(
+                    localizationUtils.getLocalizedMessage(MessageKeys.REGISTER_SUCCESSFULLY.getKey()));
+            registerResponse.setUser(user);
+            return ResponseEntity.ok(registerResponse);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            registerResponse.setMessage(e.getMessage());
+            return ResponseEntity.badRequest().body(registerResponse);
         }
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@Valid @RequestBody SetLoginDto userLoginDto) {
+    public ResponseEntity<LoginResponse> loginUser(@Valid @RequestBody SetLoginDto userLoginDto) {
         try {
             String token = userService.login(userLoginDto.getPhoneNumber(), userLoginDto.getPassword());
-            return ResponseEntity.ok(token);
+            return ResponseEntity.ok(LoginResponse.builder()
+                    .message(localizationUtils.getLocalizedMessage(MessageKeys.LOGIN_SUCCESSFULLY.getKey()))
+                    .token(token)
+                    .build());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest()
+                    .body(LoginResponse.builder()
+                            .message(localizationUtils.getLocalizedMessage(
+                                    MessageKeys.LOGIN_FAILED.getKey(), e.getMessage()))
+                            .build());
         }
     }
 }

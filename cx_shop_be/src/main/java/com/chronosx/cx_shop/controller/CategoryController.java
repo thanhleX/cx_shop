@@ -9,9 +9,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import com.chronosx.cx_shop.components.LocalizationUtils;
 import com.chronosx.cx_shop.dtos.CategoryDto;
+import com.chronosx.cx_shop.dtos.responses.CategoryResponse;
+import com.chronosx.cx_shop.dtos.responses.UpdateCategoryResponse;
 import com.chronosx.cx_shop.models.Category;
 import com.chronosx.cx_shop.services.CategoryService;
+import com.chronosx.cx_shop.utils.MessageKeys;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +29,8 @@ public class CategoryController {
 
     CategoryService categoryService;
 
+    LocalizationUtils localizationUtils;
+
     @GetMapping("")
     public ResponseEntity<List<Category>> getAllCategories(
             @RequestParam("page") int page, @RequestParam("limit") int limit) {
@@ -33,26 +39,36 @@ public class CategoryController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> createCategory(@Valid @RequestBody CategoryDto categoryDto, BindingResult result) {
+    public ResponseEntity<CategoryResponse> createCategory(
+            @Valid @RequestBody CategoryDto categoryDto, BindingResult result) {
+        CategoryResponse categoryResponse = new CategoryResponse();
         if (result.hasErrors()) {
             List<String> errorMessages = result.getFieldErrors().stream()
                     .map(FieldError::getDefaultMessage)
                     .toList();
-            return ResponseEntity.badRequest().body(errorMessages);
+            categoryResponse.setMessage(
+                    localizationUtils.getLocalizedMessage(MessageKeys.CREATE_CATEGORY_FAILED.getKey()));
+            categoryResponse.setErrors(errorMessages);
+            return ResponseEntity.badRequest().body(categoryResponse);
         }
-        categoryService.createCategory(categoryDto);
-        return ResponseEntity.ok("Category added");
+        Category category = categoryService.createCategory(categoryDto);
+        categoryResponse.setCategory(category);
+        return ResponseEntity.ok(categoryResponse);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateCategory(@PathVariable Long id, @Valid @RequestBody CategoryDto categoryDto) {
+    public ResponseEntity<UpdateCategoryResponse> updateCategory(
+            @PathVariable Long id, @Valid @RequestBody CategoryDto categoryDto) {
         categoryService.updateCategory(id, categoryDto);
-        return ResponseEntity.ok("Category updated: " + categoryDto.getName());
+        return ResponseEntity.ok(UpdateCategoryResponse.builder()
+                .message(MessageKeys.UPDATE_CATEGORY_SUCCESSFULLY.getKey())
+                .build());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteCategory(@PathVariable Long id) {
         categoryService.deleteCategory(id);
-        return ResponseEntity.ok("Category deleted");
+        return ResponseEntity.ok(
+                localizationUtils.getLocalizedMessage(MessageKeys.DELETE_CATEGORY_SUCCESSFULLY.getKey(), id));
     }
 }
