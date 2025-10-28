@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import com.chronosx.cx_shop.dtos.ProductDto;
 import com.chronosx.cx_shop.dtos.ProductImageDto;
-import com.chronosx.cx_shop.responses.ProductResponse;
 import com.chronosx.cx_shop.exceptions.DataNotFoundException;
 import com.chronosx.cx_shop.exceptions.InvalidParamException;
 import com.chronosx.cx_shop.models.Category;
@@ -19,6 +18,7 @@ import com.chronosx.cx_shop.models.ProductImage;
 import com.chronosx.cx_shop.repositories.CategoryRepository;
 import com.chronosx.cx_shop.repositories.ProductImageRepository;
 import com.chronosx.cx_shop.repositories.ProductRepository;
+import com.chronosx.cx_shop.responses.ProductResponse;
 import com.chronosx.cx_shop.services.ProductService;
 
 import lombok.AccessLevel;

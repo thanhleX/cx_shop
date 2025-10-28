@@ -1,14 +1,16 @@
 package com.chronosx.cx_shop.services.implement;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.chronosx.cx_shop.models.Role;
 import com.chronosx.cx_shop.repositories.RoleRepository;
 import com.chronosx.cx_shop.services.RoleService;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
