@@ -72,10 +72,10 @@ create table products
 
 create table product_images
 (
-    id          int primary key auto_increment,
-    product_id  int,
+    id         int primary key auto_increment,
+    product_id int,
     foreign key (product_id) references products (id),
-    image_url   varchar(300) default ''
+    image_url  varchar(300) default ''
 );
 
 create table orders
