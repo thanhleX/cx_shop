@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chronosx.cx_shop.components.LocalizationUtils;
-import com.chronosx.cx_shop.dtos.SetLoginDto;
 import com.chronosx.cx_shop.dtos.UserDto;
+import com.chronosx.cx_shop.dtos.UserLoginDto;
+import com.chronosx.cx_shop.models.User;
 import com.chronosx.cx_shop.responses.LoginResponse;
 import com.chronosx.cx_shop.responses.RegisterResponse;
-import com.chronosx.cx_shop.models.User;
 import com.chronosx.cx_shop.services.UserService;
 import com.chronosx.cx_shop.utils.MessageKeys;
 
@@ -65,9 +65,10 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> loginUser(@Valid @RequestBody SetLoginDto userLoginDto) {
+    public ResponseEntity<LoginResponse> loginUser(@Valid @RequestBody UserLoginDto userLoginDto) {
         try {
-            String token = userService.login(userLoginDto.getPhoneNumber(), userLoginDto.getPassword());
+            String token = userService.login(
+                    userLoginDto.getPhoneNumber(), userLoginDto.getPassword(), userLoginDto.getRoleId());
             return ResponseEntity.ok(LoginResponse.builder()
                     .message(localizationUtils.getLocalizedMessage(MessageKeys.LOGIN_SUCCESSFULLY.getKey()))
                     .token(token)

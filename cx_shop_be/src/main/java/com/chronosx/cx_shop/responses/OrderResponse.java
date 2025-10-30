@@ -64,8 +64,7 @@ public class OrderResponse extends BaseResponse {
     List<OrderDetail> orderDetails;
 
     public static OrderResponse fromOrder(Order order) {
-        OrderResponse orderResponse =  OrderResponse
-                .builder()
+        OrderResponse orderResponse = OrderResponse.builder()
                 .id(order.getId())
                 .userId(order.getId())
                 .fullName(order.getFullName())

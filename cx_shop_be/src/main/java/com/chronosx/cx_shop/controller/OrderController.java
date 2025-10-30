@@ -2,8 +2,6 @@ package com.chronosx.cx_shop.controller;
 
 import java.util.List;
 
-import com.chronosx.cx_shop.models.Order;
-import com.chronosx.cx_shop.utils.MessageKeys;
 import jakarta.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -13,8 +11,10 @@ import org.springframework.web.bind.annotation.*;
 
 import com.chronosx.cx_shop.components.LocalizationUtils;
 import com.chronosx.cx_shop.dtos.OrderDto;
+import com.chronosx.cx_shop.models.Order;
 import com.chronosx.cx_shop.responses.OrderResponse;
 import com.chronosx.cx_shop.services.OrderService;
+import com.chronosx.cx_shop.utils.MessageKeys;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -70,6 +70,7 @@ public class OrderController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteOrder(@Valid @PathVariable Long id) {
         orderService.deleteOrder(id);
-        return ResponseEntity.ok(localizationUtils.getLocalizedMessage(MessageKeys.DELETE_ORDER_SUCCESSFULLY.getKey(), id));
+        return ResponseEntity.ok(
+                localizationUtils.getLocalizedMessage(MessageKeys.DELETE_ORDER_SUCCESSFULLY.getKey(), id));
     }
 }

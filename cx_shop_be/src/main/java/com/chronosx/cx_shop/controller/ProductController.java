@@ -30,11 +30,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.chronosx.cx_shop.components.LocalizationUtils;
 import com.chronosx.cx_shop.dtos.ProductDto;
 import com.chronosx.cx_shop.dtos.ProductImageDto;
-import com.chronosx.cx_shop.responses.ProductListResponse;
-import com.chronosx.cx_shop.responses.ProductResponse;
 import com.chronosx.cx_shop.exceptions.DataNotFoundException;
 import com.chronosx.cx_shop.models.Product;
 import com.chronosx.cx_shop.models.ProductImage;
+import com.chronosx.cx_shop.responses.ProductListResponse;
+import com.chronosx.cx_shop.responses.ProductResponse;
 import com.chronosx.cx_shop.services.ProductService;
 import com.chronosx.cx_shop.utils.MessageKeys;
 import com.github.javafaker.Faker;
@@ -137,7 +137,7 @@ public class ProductController {
         // them uuid vao truoc ten file -> dam bao duy nhat
         String uniqueFileName = UUID.randomUUID().toString() + "_" + fileName;
         // duong dan den thu muc muon luu file
-        Path uploadDir = Paths.get("upload");
+        Path uploadDir = Paths.get("uploads");
         // kiem tra va tao thu muc neu khong ton tai
         if (!Files.exists(uploadDir)) {
             Files.createDirectories(uploadDir);
@@ -195,7 +195,8 @@ public class ProductController {
     public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
         try {
             productService.deleteProduct(id);
-            return ResponseEntity.ok(localizationUtils.getLocalizedMessage(MessageKeys.DELETE_PRODUCT_SUCCESSFULLY.getKey(), id));
+            return ResponseEntity.ok(
+                    localizationUtils.getLocalizedMessage(MessageKeys.DELETE_PRODUCT_SUCCESSFULLY.getKey(), id));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

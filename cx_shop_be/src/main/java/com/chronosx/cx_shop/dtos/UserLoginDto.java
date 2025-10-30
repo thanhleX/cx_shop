@@ -13,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SetLoginDto {
+public class UserLoginDto {
     @JsonProperty("phone_number")
     @NotBlank(message = "Phone number can't be empty")
     String phoneNumber;
