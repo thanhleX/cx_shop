@@ -3,6 +3,7 @@ package com.chronosx.cx_shop.services.implement;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.chronosx.cx_shop.dtos.OrderDetailDto;
 import com.chronosx.cx_shop.exceptions.DataNotFoundException;
@@ -59,11 +60,13 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     }
 
     @Override
+    @Transactional
     public void deleteOrderDetail(Long id) {
         orderDetailRepository.deleteById(id);
     }
 
     @Override
+    @Transactional
     public OrderDetail updateOrderDetail(Long id, OrderDetailDto orderDetailDto) throws DataNotFoundException {
         OrderDetail existingOrderDetail = orderDetailRepository
                 .findById(id)

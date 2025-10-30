@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.chronosx.cx_shop.dtos.ProductDto;
 import com.chronosx.cx_shop.dtos.ProductImageDto;
@@ -64,6 +65,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public Product updateProduct(Long id, ProductDto productDto) throws DataNotFoundException {
         Product existingProduct = getProductById(id);
         if (existingProduct != null) {
@@ -83,6 +85,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public void deleteProduct(Long id) {
         Optional<Product> product = productRepository.findById(id);
         product.ifPresent(productRepository::delete);
