@@ -2,6 +2,9 @@ package com.chronosx.cx_shop.models;
 
 import jakarta.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -24,8 +27,10 @@ public class ProductImage {
 
     @ManyToOne
     @JoinColumn(name = "product_id")
+    @JsonIgnore
     Product product;
 
     @Column(name = "image_url", length = 300)
+    @JsonProperty("image_url")
     String imageUrl;
 }

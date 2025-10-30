@@ -1,5 +1,7 @@
 package com.chronosx.cx_shop.models;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 
 import lombok.*;
@@ -32,4 +34,7 @@ public class Product extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "category_id")
     Category category;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    List<ProductImage> productImages;
 }

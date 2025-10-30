@@ -118,3 +118,11 @@ create table order_details
     total_money        float check ( total_money >= 0 ),
     color              varchar(20) default ''
 );
+
+update products
+set thumbnail = (select image_url
+                 from product_images
+                 where products.id = product_images.product_id
+                 limit 1)
+where (thumbnail is null or thumbnail = '')
+  and exists (select 1 from product_images where product_id = products.id);

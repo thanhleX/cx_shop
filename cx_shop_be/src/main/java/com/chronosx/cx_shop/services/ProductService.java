@@ -11,7 +11,7 @@ import com.chronosx.cx_shop.models.ProductImage;
 import com.chronosx.cx_shop.responses.ProductResponse;
 
 public interface ProductService {
-    Page<ProductResponse> getAllProducts(PageRequest pageRequest);
+    Page<ProductResponse> getAllProducts(String keyword, Long categoryId, PageRequest pageRequest);
 
     Product getProductById(Long id) throws DataNotFoundException;
 
