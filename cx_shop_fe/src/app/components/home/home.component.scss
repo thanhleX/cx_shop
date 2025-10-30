@@ -67,6 +67,11 @@
 
 .product-description {
     color: rgb(173, 178, 203);
+
+    // hiển thị text trogn 1 dòng
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .product-warranty {
