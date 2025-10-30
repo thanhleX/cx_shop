@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.chronosx.cx_shop.components.JwtTokenUtils;
+import com.chronosx.cx_shop.components.LocalizationUtils;
 import com.chronosx.cx_shop.dtos.UserDto;
 import com.chronosx.cx_shop.exceptions.DataNotFoundException;
 import com.chronosx.cx_shop.exceptions.PermissionDenyException;
@@ -18,6 +19,7 @@ import com.chronosx.cx_shop.models.User;
 import com.chronosx.cx_shop.repositories.RoleRepository;
 import com.chronosx.cx_shop.repositories.UserRepository;
 import com.chronosx.cx_shop.services.UserService;
+import com.chronosx.cx_shop.utils.MessageKeys;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +36,7 @@ public class UserServiceImpl implements UserService {
     PasswordEncoder passwordEncoder;
     JwtTokenUtils jwtTokenUtils;
     AuthenticationManager authenticationManager;
+    LocalizationUtils localizationUtils;
 
     @Override
     public User createUser(UserDto userDto) throws Exception {
@@ -68,7 +71,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String login(String phoneNumber, String password) throws Exception {
+    public String login(String phoneNumber, String password, Long roleId) throws Exception {
         Optional<User> user = userRepository.findByPhoneNumber(phoneNumber);
         if (user.isEmpty()) {
             throw new DataNotFoundException("invalid input");
@@ -80,6 +83,12 @@ public class UserServiceImpl implements UserService {
                 throw new BadCredentialsException("invalid input");
             }
         }
+
+        Optional<Role> optionalRole = roleRepository.findById(roleId);
+        if (optionalRole.isEmpty() || !roleId.equals(existingUser.getRole().getId())) {
+            throw new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageKeys.ROLE_NOT_EXIST.getKey()));
+        }
+
         UsernamePasswordAuthenticationToken authToken =
                 new UsernamePasswordAuthenticationToken(phoneNumber, password, existingUser.getAuthorities());
 

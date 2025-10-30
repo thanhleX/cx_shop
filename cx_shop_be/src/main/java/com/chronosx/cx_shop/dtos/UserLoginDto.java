@@ -1,5 +1,6 @@
 package com.chronosx.cx_shop.dtos;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -20,4 +21,8 @@ public class UserLoginDto {
 
     @NotBlank(message = "Email can't be empty")
     String password;
+
+    @Min(value = 1, message = "You must enter role's Id")
+    @JsonProperty("role_id")
+    Long roleId;
 }
