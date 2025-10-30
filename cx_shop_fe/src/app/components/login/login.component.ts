@@ -1,27 +1,49 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
 import { LoginDto } from '../../dtos/user/login.dto';
 import { NgForm } from '@angular/forms';
 import { LoginResponse } from '../../responses/user/login.response';
 import { TokenService } from '../../services/token.service';
+import { RoleService } from '../../services/role.service';
+import { Role } from '../../models/role';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   @ViewChild('loginForm') loginForm!: NgForm;
 
   phoneNumber: string = '0912345679';
   password: string = '123456';
 
+  roles: Role[] = [];
+  rememberMe: boolean = true;
+  selectedRole: Role | undefined;
+
   constructor(
     private router: Router,
     private userService: UserService,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private roleService: RoleService
   ) { }
+
+  ngOnInit() {
+    debugger;
+    this.roleService.getRoles().subscribe({
+      next: (roles: Role[]) => {
+        debugger;
+        this.roles = roles;
+        this.selectedRole = roles.length > 0 ? roles[0] : undefined;
+      },
+      error: (err: any) => {
+        debugger;
+        console.error('Error getting roles: ', err);
+      }
+    });
+  }
 
   onPhoneNumberChange(): void {
     console.log(`Phone typed: ${this.phoneNumber}`);
@@ -34,7 +56,8 @@ export class LoginComponent {
 
     const loginDto: LoginDto = {
       "phone_number": this.phoneNumber,
-      "password": this.password
+      "password": this.password,
+      "role_id": this.selectedRole?.id ?? 1
     };
 
     this.userService.login(loginDto)
@@ -42,16 +65,22 @@ export class LoginComponent {
         next: (response: LoginResponse) => {
           debugger;
           const { token } = response;
-          this.tokenService.setToken(token);
+          if (this.rememberMe) {
+            this.tokenService.setToken(token);
+          }
           // this.router.navigate(['/']);
         },
         complete: () => {
           debugger;
         },
         error: (error: any) => {
-          alert(`Cannot register, error: ${error.error}`)
-          console.error(error);
+          debugger;
+          alert(error?.error?.message)
         }
       });
+  }
+
+  createAccount() {
+    
   }
 }
