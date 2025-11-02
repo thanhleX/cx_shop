@@ -68,7 +68,9 @@ public class UserController {
     public ResponseEntity<LoginResponse> loginUser(@Valid @RequestBody UserLoginDto userLoginDto) {
         try {
             String token = userService.login(
-                    userLoginDto.getPhoneNumber(), userLoginDto.getPassword(), userLoginDto.getRoleId());
+                    userLoginDto.getPhoneNumber(),
+                    userLoginDto.getPassword(),
+                    userLoginDto.getRoleId() == null ? 1 : userLoginDto.getRoleId());
             return ResponseEntity.ok(LoginResponse.builder()
                     .message(localizationUtils.getLocalizedMessage(MessageKeys.LOGIN_SUCCESSFULLY.getKey()))
                     .token(token)
