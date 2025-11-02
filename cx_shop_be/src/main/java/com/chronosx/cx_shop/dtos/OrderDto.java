@@ -1,6 +1,7 @@
 package com.chronosx.cx_shop.dtos;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -48,4 +49,7 @@ public class OrderDto {
 
     @JsonProperty("payment_method")
     String paymentMethod;
+
+    @JsonProperty("cart_items")
+    List<CartItemDto> cartItems;
 }

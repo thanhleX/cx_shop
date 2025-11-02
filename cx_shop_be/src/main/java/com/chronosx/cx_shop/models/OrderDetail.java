@@ -2,6 +2,8 @@ package com.chronosx.cx_shop.models;
 
 import jakarta.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -21,6 +23,8 @@ public class OrderDetail {
 
     @ManyToOne
     @JoinColumn(name = "order_id")
+    @JsonBackReference
+    @ToString.Exclude
     Order order;
 
     @ManyToOne

@@ -67,16 +67,11 @@ public class Order {
     @Column(name = "payment_method", length = 100)
     String paymentMethod;
 
-    //    @Column(name = "payment_status")
-    //    String paymentStatus;
-    //
-    //    @Column(name = "payment_date")
-    //    Date paymentDate;
-
     @Column(name = "is_active")
     Boolean isActive;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
-    private List<OrderDetail> orderDetails;
+    @ToString.Exclude
+    List<OrderDetail> orderDetails;
 }

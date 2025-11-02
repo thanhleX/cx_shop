@@ -10,7 +10,7 @@ import com.chronosx.cx_shop.responses.OrderResponse;
 public interface OrderService {
     OrderResponse createOrder(OrderDto orderDto) throws DataNotFoundException;
 
-    Order getOrderById(Long id);
+    OrderResponse getOrderById(Long id) throws DataNotFoundException;
 
     Order updateOrder(Long id, OrderDto orderDto) throws DataNotFoundException;
 

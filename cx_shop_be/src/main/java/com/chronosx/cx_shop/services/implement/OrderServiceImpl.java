@@ -1,6 +1,7 @@
 package com.chronosx.cx_shop.services.implement;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -8,12 +9,13 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.chronosx.cx_shop.dtos.CartItemDto;
 import com.chronosx.cx_shop.dtos.OrderDto;
 import com.chronosx.cx_shop.exceptions.DataNotFoundException;
-import com.chronosx.cx_shop.models.Order;
-import com.chronosx.cx_shop.models.OrderStatus;
-import com.chronosx.cx_shop.models.User;
+import com.chronosx.cx_shop.models.*;
+import com.chronosx.cx_shop.repositories.OrderDetailRepository;
 import com.chronosx.cx_shop.repositories.OrderRepository;
+import com.chronosx.cx_shop.repositories.ProductRepository;
 import com.chronosx.cx_shop.repositories.UserRepository;
 import com.chronosx.cx_shop.responses.OrderResponse;
 import com.chronosx.cx_shop.services.OrderService;
@@ -29,10 +31,13 @@ public class OrderServiceImpl implements OrderService {
 
     OrderRepository orderRepository;
     UserRepository userRepository;
+    ProductRepository productRepository;
+    OrderDetailRepository orderDetailRepository;
 
     ModelMapper modelMapper;
 
     @Override
+    @Transactional
     public OrderResponse createOrder(OrderDto orderDto) throws DataNotFoundException {
         User user = userRepository
                 .findById(orderDto.getUserId())
@@ -53,13 +58,51 @@ public class OrderServiceImpl implements OrderService {
         }
         order.setShippingDate(shippingDate);
         order.setIsActive(true);
+        order.setTotalMoney(orderDto.getTotalMoney());
         orderRepository.save(order);
+
+        // Tạo danh sách các đối tượng OrderDetail từ cartItems
+        List<OrderDetail> orderDetails = new ArrayList<>();
+        for (CartItemDto cartItemDto : orderDto.getCartItems()) {
+            // Tạo một đối tượng OrderDetail từ CartItemDTO
+            OrderDetail orderDetail = new OrderDetail();
+            orderDetail.setOrder(order);
+
+            // Lấy thông tin sản phẩm từ cartItemDTO
+            Long productId = cartItemDto.getProductId();
+            int quantity = cartItemDto.getQuantity();
+
+            Product product = productRepository
+                    .findById(productId)
+                    .orElseThrow(() -> new DataNotFoundException("cannot find product with id = " + productId));
+
+            orderDetail.setProduct(product);
+            orderDetail.setNumberOfProducts(quantity);
+            orderDetail.setPrice(product.getPrice());
+            orderDetail.setTotalMoney(product.getPrice() * quantity);
+            orderDetails.add(orderDetail);
+        }
+        orderDetailRepository.saveAll(orderDetails);
+
+        modelMapper.typeMap(Order.class, OrderResponse.class).addMappings(mapper -> {
+            // Ánh xạ Order.user.id sang OrderResponse.userId
+            mapper.map(src -> src.getUser().getId(), OrderResponse::setUserId);
+        });
+
         return modelMapper.map(order, OrderResponse.class);
     }
 
     @Override
-    public Order getOrderById(Long id) {
-        return orderRepository.findById(id).orElse(null);
+    public OrderResponse getOrderById(Long id) throws DataNotFoundException {
+        Order selectedOrder = orderRepository
+                .findById(id)
+                .orElseThrow(() -> new DataNotFoundException("cannot find order with id = " + id));
+
+        modelMapper.typeMap(Order.class, OrderResponse.class).addMappings(mapper -> {
+            mapper.map(src -> src.getUser().getId(), OrderResponse::setUserId);
+        });
+
+        return modelMapper.map(selectedOrder, OrderResponse.class);
     }
 
     @Override

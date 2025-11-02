@@ -18,7 +18,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class OrderResponse extends BaseResponse {
+public class OrderResponse {
     Long id;
 
     @JsonProperty("user_id")
@@ -66,7 +66,7 @@ public class OrderResponse extends BaseResponse {
     public static OrderResponse fromOrder(Order order) {
         OrderResponse orderResponse = OrderResponse.builder()
                 .id(order.getId())
-                .userId(order.getId())
+                .userId(order.getUser().getId())
                 .fullName(order.getFullName())
                 .phoneNumber(order.getPhoneNumber())
                 .email(order.getEmail())
