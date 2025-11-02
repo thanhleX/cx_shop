@@ -25,8 +25,17 @@ export class CartService {
     this.saveCartToLocalStorage();
   }
 
+  getCart(): Map<number, number> {
+    return this.cart;
+  }
+
   private saveCartToLocalStorage(): void {
     debugger;
     localStorage.setItem('cart', JSON.stringify(Array.from(this.cart.entries())));
+  }
+
+  clearCart(): void {
+    this.cart.clear();
+    this.saveCartToLocalStorage();
   }
 }
