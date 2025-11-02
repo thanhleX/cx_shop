@@ -13,7 +13,6 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString
 @Entity
 @Table(name = "product_images")
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -33,4 +32,10 @@ public class ProductImage {
     @Column(name = "image_url", length = 300)
     @JsonProperty("image_url")
     String imageUrl;
+
+    @Override
+    public String toString() {
+        // KHÔNG bao gồm product, chỉ bao gồm ID của nó
+        return "ProductImage [id=" + id + ", imageUrl=" + imageUrl + ", productId=" + product.getId() + "]";
+    }
 }

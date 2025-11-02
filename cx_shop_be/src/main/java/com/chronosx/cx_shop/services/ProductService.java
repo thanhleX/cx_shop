@@ -1,5 +1,7 @@
 package com.chronosx.cx_shop.services;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
@@ -15,6 +17,8 @@ public interface ProductService {
 
     Product getProductById(Long id) throws DataNotFoundException;
 
+    List<Product> findProductsByIds(List<Long> productIds);
+
     Product createProduct(ProductDto productDto) throws DataNotFoundException;
 
     Product updateProduct(Long id, ProductDto productDto) throws DataNotFoundException;
@@ -23,5 +27,5 @@ public interface ProductService {
 
     boolean existsByName(String name);
 
-    public ProductImage createProductImage(Long productId, ProductImageDto productImageDto) throws Exception;
+    ProductImage createProductImage(Long productId, ProductImageDto productImageDto) throws Exception;
 }

@@ -2,6 +2,7 @@ package com.chronosx.cx_shop.services.implement;
 
 import static com.chronosx.cx_shop.models.ProductImage.MAXIMUM_IMAGES_PER_PRODUCT;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -44,7 +45,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product getProductById(Long id) throws DataNotFoundException {
-        return productRepository.findById(id).orElseThrow(() -> new DataNotFoundException("product id not found"));
+        Optional<Product> product = productRepository.getDetailProduct(id);
+        if (product.isPresent()) return product.get();
+        throw new DataNotFoundException("product with id " + id + " not found");
+    }
+
+    @Override
+    public List<Product> findProductsByIds(List<Long> productIds) {
+        return productRepository.findProductsByIds(productIds);
     }
 
     @Override

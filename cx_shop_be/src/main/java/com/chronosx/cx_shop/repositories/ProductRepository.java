@@ -1,5 +1,8 @@
 package com.chronosx.cx_shop.repositories;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,4 +24,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             + "and (:keyword is null or :keyword = '' or a.name like %:keyword% or a.description like %:keyword%)")
     Page<Product> searchProducts(
             @Param("categoryId") Long categoryId, @Param("keyword") String keyword, Pageable pageable);
+
+    @Query("select a from Product a left join fetch a.productImages where a.id = :productId")
+    Optional<Product> getDetailProduct(@Param("productId") Long productId);
+
+    @Query("select a from Product a where a.id in :productIds")
+    List<Product> findProductsByIds(@Param("productIds") List<Long> productIds);
 }

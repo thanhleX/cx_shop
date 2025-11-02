@@ -46,7 +46,7 @@ public class OrderController {
         }
     }
 
-    @GetMapping("/{user_id}")
+    @GetMapping("/user/{user_id}")
     public ResponseEntity<?> getOrdersByUser(@Valid @PathVariable("user_id") Long userId) {
         try {
             List<Order> orders = orderService.getAllOrdersByUserId(userId);
@@ -56,10 +56,20 @@ public class OrderController {
         }
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getOrderById(@Valid @PathVariable("id") Long orderId) {
+        try {
+            OrderResponse existingOrder = orderService.getOrderById(orderId);
+            return ResponseEntity.ok(existingOrder);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<?> updateOrder(@Valid @PathVariable Long id, @Valid @RequestBody OrderDto orderDto) {
         try {
-            Order existingOrder = orderService.getOrderById(id);
+            Order existingOrder = orderService.updateOrder(id, orderDto);
             OrderResponse orderResponse = OrderResponse.fromOrder(existingOrder);
             return ResponseEntity.ok(orderResponse);
         } catch (Exception e) {
