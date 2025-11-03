@@ -23,7 +23,7 @@ import { TokenInterceptor } from './interceptors/token.interceptor';
     FooterComponent,
     ProductDetailComponent,
     OrderComponent,
-    OrderConfirmComponent,
+    OrderDetailComponent,
     LoginComponent,
     RegisterComponent,
   ],
@@ -45,8 +45,8 @@ import { TokenInterceptor } from './interceptors/token.interceptor';
     // HomeComponent,
     // ProductDetailComponent,
     // OrderComponent,
-    // OrderConfirmComponent,
-    LoginComponent,
+    // OrderDetailComponent,
+    // LoginComponent,
     // RegisterComponent,
   ]
 })
