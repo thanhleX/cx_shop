@@ -81,6 +81,6 @@ export class LoginComponent implements OnInit {
   }
 
   createAccount() {
-    
+    this.router.navigate(['/register']);
   }
 }
