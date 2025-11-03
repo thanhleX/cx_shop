@@ -1,5 +1,7 @@
 package com.chronosx.cx_shop.dtos;
 
+import java.util.Date;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -31,7 +33,7 @@ public class UserDto {
     String retypePassword;
 
     @JsonProperty("date_of_birth")
-    String dateOfBirth;
+    Date dateOfBirth;
 
     @JsonProperty("facebook_account_id")
     int facebookAccountId;

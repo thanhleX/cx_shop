@@ -7,10 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.chronosx.cx_shop.components.LocalizationUtils;
 import com.chronosx.cx_shop.dtos.UserDto;
@@ -18,6 +15,7 @@ import com.chronosx.cx_shop.dtos.UserLoginDto;
 import com.chronosx.cx_shop.models.User;
 import com.chronosx.cx_shop.responses.LoginResponse;
 import com.chronosx.cx_shop.responses.RegisterResponse;
+import com.chronosx.cx_shop.responses.UserResponse;
 import com.chronosx.cx_shop.services.UserService;
 import com.chronosx.cx_shop.utils.MessageKeys;
 
@@ -81,6 +79,17 @@ public class UserController {
                             .message(localizationUtils.getLocalizedMessage(
                                     MessageKeys.LOGIN_FAILED.getKey(), e.getMessage()))
                             .build());
+        }
+    }
+
+    @PostMapping("/details")
+    public ResponseEntity<UserResponse> getUserResponse(@RequestHeader("Authorization") String token) {
+        try {
+            String extractedToken = token.substring(7); // remove "Bearer " from string token
+            User user = userService.getUserDetailsFromToken(extractedToken);
+            return ResponseEntity.ok(UserResponse.fromUser(user));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
         }
     }
 }

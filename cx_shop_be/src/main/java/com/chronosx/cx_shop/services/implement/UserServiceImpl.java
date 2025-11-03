@@ -56,7 +56,8 @@ public class UserServiceImpl implements UserService {
                 .phoneNumber(userDto.getPhoneNumber())
                 .password(userDto.getPassword())
                 .address(userDto.getAddress())
-                .dateOfBirthDay(userDto.getDateOfBirth())
+                .isActive(true)
+                .dateOfBirth(userDto.getDateOfBirth())
                 .facebookAccountId(userDto.getFacebookAccountId())
                 .googleAccountId(userDto.getGoogleAccountId())
                 .build();
@@ -88,6 +89,9 @@ public class UserServiceImpl implements UserService {
         if (optionalRole.isEmpty() || !roleId.equals(existingUser.getRole().getId())) {
             throw new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageKeys.ROLE_NOT_EXIST.getKey()));
         }
+        if (!user.get().getIsActive()) {
+            throw new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageKeys.USER_IS_LOCKED.getKey()));
+        }
 
         UsernamePasswordAuthenticationToken authToken =
                 new UsernamePasswordAuthenticationToken(phoneNumber, password, existingUser.getAuthorities());
@@ -95,5 +99,20 @@ public class UserServiceImpl implements UserService {
         // authenticate with Java Spring Security
         authenticationManager.authenticate(authToken);
         return jwtTokenUtils.generateToken(existingUser);
+    }
+
+    @Override
+    public User getUserDetailsFromToken(String token) throws Exception {
+        if (jwtTokenUtils.isTokenExpired(token)) {
+            throw new BadCredentialsException("token expired");
+        }
+        String phoneNumber = jwtTokenUtils.extractPhoneNumberFromToken(token);
+        Optional<User> user = userRepository.findByPhoneNumber(phoneNumber);
+
+        if (user.isPresent()) {
+            return user.get();
+        } else {
+            throw new DataNotFoundException("user not found");
+        }
     }
 }

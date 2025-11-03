@@ -36,6 +36,7 @@ public class JwtTokenUtils {
     public String generateToken(User user) throws InvalidParamException {
         Map<String, Object> claims = new HashMap<>();
         claims.put("phoneNumber", user.getPhoneNumber());
+        claims.put("userId", user.getId());
         try {
             String token = Jwts.builder()
                     .setClaims(claims)
@@ -67,7 +68,7 @@ public class JwtTokenUtils {
         return claimsResolver.apply(claims);
     }
 
-    boolean isTokenExpired(String token) {
+    public boolean isTokenExpired(String token) {
         Date expirationDate = this.extractClaim(token, Claims::getExpiration);
         return expirationDate.before(new Date());
     }

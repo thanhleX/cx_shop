@@ -2,6 +2,7 @@ package com.chronosx.cx_shop.models;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import jakarta.persistence.*;
@@ -43,7 +44,7 @@ public class User extends BaseEntity implements UserDetails {
     Boolean isActive;
 
     @Column(name = "date_of_birth")
-    String dateOfBirthDay;
+    Date dateOfBirth;
 
     @Column(name = "facebook_account_id")
     int facebookAccountId;
