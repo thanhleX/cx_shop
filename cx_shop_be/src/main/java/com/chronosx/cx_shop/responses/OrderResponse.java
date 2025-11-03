@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.chronosx.cx_shop.models.Order;
 import com.chronosx.cx_shop.models.OrderDetail;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.*;
@@ -36,7 +35,7 @@ public class OrderResponse {
     String note;
 
     @JsonProperty("order_date")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    // @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     Date orderDate;
 
     String status;
@@ -51,7 +50,7 @@ public class OrderResponse {
     String shippingAddress;
 
     @JsonProperty("shipping_date")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    // @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     LocalDate shippingDate;
 
     @JsonProperty("tracking_number")
