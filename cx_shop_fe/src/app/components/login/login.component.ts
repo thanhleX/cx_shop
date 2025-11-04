@@ -7,6 +7,7 @@ import { LoginResponse } from '../../responses/user/login.response';
 import { TokenService } from '../../services/token.service';
 import { RoleService } from '../../services/role.service';
 import { Role } from '../../models/role';
+import { UserResponse } from '../../responses/user/user.response';
 
 @Component({
   selector: 'app-login',
@@ -22,12 +23,13 @@ export class LoginComponent implements OnInit {
   roles: Role[] = [];
   rememberMe: boolean = true;
   selectedRole: Role | undefined;
+  userResponse?: UserResponse;
 
   constructor(
     private router: Router,
     private userService: UserService,
     private tokenService: TokenService,
-    private roleService: RoleService
+    private roleService: RoleService,
   ) { }
 
   ngOnInit() {
@@ -60,24 +62,37 @@ export class LoginComponent implements OnInit {
       "role_id": this.selectedRole?.id ?? 1
     };
 
-    this.userService.login(loginDto)
-      .subscribe({
-        next: (response: LoginResponse) => {
+    this.userService.login(loginDto).subscribe({
+      next: (response: LoginResponse) => {
+        debugger;
+        const { token } = response;
+        if (this.rememberMe) {
+          this.tokenService.setToken(token);
           debugger;
-          const { token } = response;
-          if (this.rememberMe) {
-            this.tokenService.setToken(token);
-          }
-          // this.router.navigate(['/']);
-        },
-        complete: () => {
-          debugger;
-        },
-        error: (error: any) => {
-          debugger;
-          alert(error?.error?.message)
+          this.userService.getUserDetail(token).subscribe({
+            next: (response: any) => {
+              debugger;
+              this.userResponse = {
+                ...response,
+                date_of_birth: new Date(response.date_of_birth),
+              };
+              this.userService.saveUserResponseToLocalStorage(this.userResponse);
+              this.router.navigate(['/']);
+            },
+            complete: () => {
+              debugger;
+            }
+          });
         }
-      });
+      },
+      complete: () => {
+        debugger;
+      },
+      error: (error: any) => {
+        debugger;
+        alert(error?.error?.message)
+      }
+    });
   }
 
   createAccount() {

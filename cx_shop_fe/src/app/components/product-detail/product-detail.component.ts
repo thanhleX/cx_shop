@@ -26,8 +26,9 @@ export class ProductDetailComponent implements OnInit {
     private cartService: CartService) { }
 
   ngOnInit() {
+    const idParam = this.activedRoute.snapshot.paramMap.get('id');
     debugger;
-    const idParam = 9; // fake 1 temp value
+    // const idParam = 9; // fake 1 temp value
     if (idParam !== null) {
       this.productId = +idParam;
     }
@@ -97,6 +98,11 @@ export class ProductDetailComponent implements OnInit {
   }
 
   buyNow(): void {
-    alert('mua thanh cong');
+    if (this.product) {
+      this.cartService.addToCart(this.product.id, this.quantity);
+      this.router.navigate(['/orders']);
+    } else {
+      console.log("cannot buy product because product id is null");
+    }
   }
 }

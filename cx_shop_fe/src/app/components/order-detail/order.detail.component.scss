@@ -1,3 +1,5 @@
+@import '../../../styles.scss';
+
 .container {
     color: white;
 }
@@ -12,7 +14,7 @@
 }
 
 .product-header {
-    color: rgb(233, 66, 176);
+    color: $cx-shop-tint-color;
 }
 
 .form-label {
@@ -20,7 +22,7 @@
 }
 
 .product-order {
-    color: rgb(105, 244, 181);
+    color: $cx-shop-title-color;
 }
 
 .product-info {
@@ -47,7 +49,7 @@ table {
     border-collapse: separate;
     border: 1px solid white;
     border-spacing: 0;
-    background-color: rgb(12, 13, 54);
+    background-color: $cx-shop-background-color;
 }
 
 th, td {
@@ -56,7 +58,7 @@ th, td {
 }
 
 .btn-gradient {
-    background: linear-gradient(to right, rgb(255, 64, 180), rgb(126, 43, 237));
+    background: linear-gradient(to right, $cx-shop-tint-color, $cx-shop-color);
     color: white;
     border-radius: 30px;
     width: 200px;

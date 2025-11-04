@@ -1,10 +1,12 @@
+@import '../../../styles.scss';
+
 .container {
     color: white;
     height: 100vh;    
 }
 
 .register-form {
-    background-color: rgb(12, 12, 55);
+    background-color: $cx-shop-background-color;
     border-radius: 10px;
     padding: 20px;
     max-width: 500px;
@@ -15,7 +17,7 @@
 
 .register-header {
     text-align: center;
-    color: rgb(105, 244, 181);
+    color: $cx-shop-title-color;
     margin-bottom: 20px;
 
 }
@@ -48,7 +50,7 @@
     top: 50%;
     right: 10px;
     transform: translateY(-50%);
-    color: rgb(105, 244, 181);
+    color: $cx-shop-title-color;
     cursor: pointer;
 }
 
@@ -62,7 +64,7 @@
 
 .checkbox-text input[type="checkbox"]:checked {
     border-color: white;
-    background-color: rgb(233, 66, 178);
+    background-color: $cx-shop-tint-color;
 }
 
 .form-check-input {
@@ -70,12 +72,12 @@
 }
 
 .register-link {
-    color: rgb(105, 244, 181);
+    color: $cx-shop-title-color;
     text-decoration: none;
 }
 
 .register-button {
-    background: linear-gradient(to right, rgb(225, 64, 180), rgb(126, 43, 237));
+    background: linear-gradient(to right, $cx-shop-tint-color, $cx-shop-color);
     color: white;
     border-radius: 30px;
     width: 100%;

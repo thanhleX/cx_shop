@@ -1,3 +1,5 @@
+@import '../../../styles.scss';
+
 .container {
     color: white;
 }
@@ -9,18 +11,18 @@
 }
 
 .product-header {
-    color: rgb(233, 66, 176);
+    color: $cx-shop-tint-color;
 }
 
 .form-control {
-    background-color: rgb(19, 23, 42);
+    background-color: $cx-shop-background-color;
     border: 1px solid rgb(29, 33, 54);
     color: white;
 }
 
 .form-control:focus {
     border-color: white;
-    background-color: rgb(19, 23, 42);
+    background-color: $cx-shop-background-color;
 }
 
 .form-label {
@@ -28,7 +30,7 @@
 }
 
 .product-order {
-    color: rgb(105, 244, 181);
+    color: $cx-shop-title-color;
 }
 
 table {
@@ -38,10 +40,13 @@ table {
     border-collapse: separate;
     border: 1px solid white;
     border-spacing: 0;
-    background-color: rgb(12, 13, 54);
+    background-color: $cx-shop-background-color;
+
+    border-collapse: collapse;
 }
 
-th, td {
+th,
+td {
     padding: 10px;
     text-align: center;
 }
@@ -64,8 +69,15 @@ th, td {
 }
 
 .btn-gradient {
-    background: linear-gradient(to right, rgb(255, 64, 180), rgb(126, 43, 237));
+    background: linear-gradient(to right, $cx-shop-tint-color, $cx-shop-color);
     color: white;
     border-radius: 30px;
     width: 200px;
+}
+
+.table-container {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid white;
+    border-radius: 10px;
 }

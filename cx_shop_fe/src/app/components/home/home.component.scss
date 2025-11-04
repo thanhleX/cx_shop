@@ -1,3 +1,5 @@
+@import '../../../styles.scss';
+
 .intro-section {
     color: white;
     padding: 20px;
@@ -30,7 +32,7 @@
 
 .search-input {
     width: 300px;
-    background-color: rgb(19, 23, 42);
+    background-color: $cx-shop-background-color;
     margin-right: 10px;
     border-color: rgba(255, 255, 255, 0.5);
     color: white;
@@ -41,14 +43,14 @@
 }
 
 .product-category option {
-    background-color: rgb(19, 23, 42);
+    background-color: $cx-shop-background-color;
     color: white;
     padding: 10px;
     border-color: rgba(255, 255, 255, 0.5);
 }
 
 .product-item {
-    background-color: rgb(19, 23, 42);
+    background-color: $cx-shop-background-color;
     border: 1px solid rgb(35, 39, 61);
     border-radius: 20px;
     padding: 20px;
@@ -75,7 +77,7 @@
 }
 
 .product-warranty {
-    color: rgb(242, 126, 212);
+    color: $cx-shop-tint-color;
 }
 
 .product-price {

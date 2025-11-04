@@ -6,6 +6,9 @@ import { environment } from '../../environments/environment';
 import { OrderDto } from '../../dtos/order/order.dto';
 import { OrderService } from '../../services/order.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { TokenService } from '../../services/token.service';
+import { Order } from '../../models/order';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-order',
@@ -35,9 +38,11 @@ export class OrderComponent implements OnInit {
     private cartService: CartService,
     private productService: ProductService,
     private orderService: OrderService,
-    private fb: FormBuilder
+    private tokenService: TokenService,
+    private formBuilder: FormBuilder,
+    private router: Router,
   ) {
-    this.orderForm = this.fb.group({
+    this.orderForm = this.formBuilder.group({
       full_name: ['nguyen van abc', Validators.required],
       email: ['abc@gmail.com', [Validators.email]],
       phone_number: ['0912345678', [Validators.required, Validators.minLength(10)]],
@@ -49,12 +54,19 @@ export class OrderComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    debugger;
+    // this.cartService.clearCart();
+    this.orderData.user_id = this.tokenService.getUserId();
     // get product list from cart
     debugger;
     const cart = this.cartService.getCart();
     const productIds = Array.from(cart.keys()); // get id list from cart map
 
     debugger;
+    if (productIds.length === 0) {
+      return;
+    }
+    
     this.productService.getProductsByIds(productIds).subscribe({
       next: (products) => {
         debugger;
@@ -101,16 +113,18 @@ export class OrderComponent implements OnInit {
         ...this.orderData,
         ...this.orderForm.value
       };
-      
+
       this.orderData.cart_items = this.cartItems.map(cartItem => ({
         product_id: cartItem.product.id,
         quantity: cartItem.quantity
       }));
-
+      this.orderData.total_money = this.totalAmount;
       this.orderService.placeOrder(this.orderData).subscribe({
-        next: (response) => {
+        next: (response: Order) => {
           debugger;
-          console.log("order thanh cong");
+          alert("order thanh cong");
+          this.cartService.clearCart();
+          this.router.navigate(['/']);
         },
         complete: () => {
           debugger;
@@ -118,7 +132,7 @@ export class OrderComponent implements OnInit {
         },
         error: (error: any) => {
           debugger;
-          console.error("loi dat hang");
+          alert(`Loi dat hang: ${error}`);
         }
       });
     } else {
