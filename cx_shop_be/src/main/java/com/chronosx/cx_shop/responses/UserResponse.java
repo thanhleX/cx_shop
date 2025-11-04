@@ -20,7 +20,7 @@ public class UserResponse {
     @JsonProperty("id")
     Long id;
 
-    @JsonProperty("fullname")
+    @JsonProperty("full_name")
     String fullName;
 
     @JsonProperty("phone_number")
