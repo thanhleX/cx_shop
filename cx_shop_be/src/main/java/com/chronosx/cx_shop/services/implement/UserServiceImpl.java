@@ -8,9 +8,11 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.chronosx.cx_shop.components.JwtTokenUtils;
 import com.chronosx.cx_shop.components.LocalizationUtils;
+import com.chronosx.cx_shop.dtos.UpdateUserDto;
 import com.chronosx.cx_shop.dtos.UserDto;
 import com.chronosx.cx_shop.exceptions.DataNotFoundException;
 import com.chronosx.cx_shop.exceptions.PermissionDenyException;
@@ -69,6 +71,44 @@ public class UserServiceImpl implements UserService {
             newUser.setPassword(encodePassword);
         }
         return userRepository.save(newUser);
+    }
+
+    @Override
+    @Transactional
+    public User updateUser(Long userId, UpdateUserDto userDto) throws Exception {
+        User existingUser =
+                userRepository.findById(userId).orElseThrow(() -> new DataNotFoundException("user not found"));
+
+        String phoneNumber = userDto.getPhoneNumber();
+        if (!existingUser.getPhoneNumber().equals(phoneNumber) && userRepository.existsByPhoneNumber(phoneNumber)) {
+            throw new DataIntegrityViolationException("phone number already exists");
+        }
+
+        if (userDto.getFullName() != null) {
+            existingUser.setFullName(userDto.getFullName());
+        }
+        if (phoneNumber != null) {
+            existingUser.setPhoneNumber(phoneNumber);
+        }
+        if (userDto.getAddress() != null) {
+            existingUser.setAddress(userDto.getAddress());
+        }
+        if (userDto.getDateOfBirth() != null) {
+            existingUser.setDateOfBirth(userDto.getDateOfBirth());
+        }
+        if (userDto.getFacebookAccountId() > 0) {
+            existingUser.setFacebookAccountId(userDto.getFacebookAccountId());
+        }
+        if (userDto.getGoogleAccountId() > 0) {
+            existingUser.setGoogleAccountId(userDto.getGoogleAccountId());
+        }
+
+        if (userDto.getPassword() != null && !userDto.getPassword().isEmpty()) {
+            String newPassword = userDto.getPassword();
+            String encodedPassword = passwordEncoder.encode(newPassword);
+            existingUser.setPassword(encodedPassword);
+        }
+        return userRepository.save(existingUser);
     }
 
     @Override

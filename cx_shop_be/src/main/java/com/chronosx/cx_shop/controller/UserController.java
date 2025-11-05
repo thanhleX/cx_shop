@@ -1,15 +1,18 @@
 package com.chronosx.cx_shop.controller;
 
 import java.util.List;
+import java.util.Objects;
 
 import jakarta.validation.Valid;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import com.chronosx.cx_shop.components.LocalizationUtils;
+import com.chronosx.cx_shop.dtos.UpdateUserDto;
 import com.chronosx.cx_shop.dtos.UserDto;
 import com.chronosx.cx_shop.dtos.UserLoginDto;
 import com.chronosx.cx_shop.models.User;
@@ -83,11 +86,30 @@ public class UserController {
     }
 
     @PostMapping("/details")
-    public ResponseEntity<UserResponse> getUserResponse(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<UserResponse> getUserResponse(@RequestHeader("Authorization") String authorizationHeader) {
         try {
-            String extractedToken = token.substring(7); // remove "Bearer " from string token
+            String extractedToken = authorizationHeader.substring(7); // remove "Bearer " from string token
             User user = userService.getUserDetailsFromToken(extractedToken);
             return ResponseEntity.ok(UserResponse.fromUser(user));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PutMapping("/details/{userId}")
+    public ResponseEntity<UserResponse> updateUserDetails(
+            @PathVariable Long userId,
+            @RequestBody UpdateUserDto updateUserDto,
+            @RequestHeader("Authorization") String authorizationHeader) {
+        try {
+            String extractedToken = authorizationHeader.substring(7); // remove "Bearer " from string token
+            User user = userService.getUserDetailsFromToken(extractedToken);
+            if (!Objects.equals(user.getId(), userId)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
+            User updatedUser = userService.updateUser(userId, updateUserDto);
+            return ResponseEntity.ok(UserResponse.fromUser(updatedUser));
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
