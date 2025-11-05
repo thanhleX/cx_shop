@@ -2,7 +2,7 @@
 
 .container {
     color: white;
-    height: 100vh;
+    height: calc(86vh + 6px);
 }
 
 .login-form {
@@ -12,6 +12,7 @@
     max-width: 500px;
     border: 1px solid rgb(32, 34, 60);
     align-items: center;
+    margin-top: 60px;
     justify-content: center;
 }
 
