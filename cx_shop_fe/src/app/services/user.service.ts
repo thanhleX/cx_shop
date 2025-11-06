@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { RegisterDto } from '../dtos/user/register.dto';
 import { LoginDto } from '../dtos/user/login.dto';
 import { environment } from '../environments/environment';
@@ -14,6 +14,12 @@ export class UserService {
   private apiRegister = `${environment.apiBaseUrl}/users/register`;
   private apiLogin = `${environment.apiBaseUrl}/users/login`;
   private apiUserDetail = `${environment.apiBaseUrl}/users/details`;
+
+  // BehaviorSubject để header và các component khác theo dõi thay đổi user
+  private userSubject = new BehaviorSubject<UserResponse | null>(
+    this.getUserResponseFromLocalStorage()
+  );
+  user$ = this.userSubject.asObservable();
 
   private apiConfig = {
     headers: this.createHeader(),
@@ -55,6 +61,7 @@ export class UserService {
       const userResponseJSON = JSON.stringify(userResponse);
       localStorage.setItem('user', userResponseJSON);
       console.log('User response saved to local storage');
+      this.userSubject.next(userResponse); // update BehaviorSubject
     } catch (error) {
       console.error('Error saving user response to local storage: ', error);
     }
@@ -76,11 +83,12 @@ export class UserService {
     }
   }
 
-  removeUserFromLocalStorage():void {
+  removeUserFromLocalStorage(): void {
     try {
       localStorage.removeItem('user');
       console.log('User data removed from local storage.');
-    } catch(error) {
+      this.userSubject.next(null); // reset BehaviorSubject
+    } catch (error) {
       console.error('Error removed user data from local storage: ', error);
     }
   }
