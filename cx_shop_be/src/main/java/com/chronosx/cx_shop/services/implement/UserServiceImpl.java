@@ -104,6 +104,9 @@ public class UserServiceImpl implements UserService {
         }
 
         if (userDto.getPassword() != null && !userDto.getPassword().isEmpty()) {
+            if (!userDto.getPassword().equals(userDto.getRetypePassword())) {
+                throw new DataNotFoundException("password does not match");
+            }
             String newPassword = userDto.getPassword();
             String encodedPassword = passwordEncoder.encode(newPassword);
             existingUser.setPassword(encodedPassword);
