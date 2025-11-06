@@ -17,7 +17,7 @@ import { UserResponse } from '../../responses/user/user.response';
 export class LoginComponent implements OnInit {
   @ViewChild('loginForm') loginForm!: NgForm;
 
-  phoneNumber: string = '0912345679';
+  phoneNumber: string = '0912345676';
   password: string = '123456';
 
   roles: Role[] = [];
@@ -81,6 +81,10 @@ export class LoginComponent implements OnInit {
             },
             complete: () => {
               debugger;
+            },
+            error: (error: any) => {
+              debugger;
+              alert(error.error.message);
             }
           });
         }

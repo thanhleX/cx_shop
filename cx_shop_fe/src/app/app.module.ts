@@ -15,6 +15,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenInterceptor } from './interceptors/token.interceptor';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     OrderDetailComponent,
     LoginComponent,
     RegisterComponent,
+    UserProfileComponent,
   ],
   imports: [
     BrowserModule,
@@ -45,12 +47,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
   ],
   bootstrap: [
     AppComponent,
-    // HomeComponent,
-    // ProductDetailComponent,
-    // OrderComponent,
-    // OrderDetailComponent,
-    // LoginComponent,
-    // RegisterComponent,
   ]
 })
 export class AppModule { }
