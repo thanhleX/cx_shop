@@ -4,7 +4,11 @@ import java.util.List;
 
 import jakarta.validation.Valid;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import com.chronosx.cx_shop.components.LocalizationUtils;
 import com.chronosx.cx_shop.dtos.OrderDto;
 import com.chronosx.cx_shop.models.Order;
+import com.chronosx.cx_shop.responses.OrderListResponse;
 import com.chronosx.cx_shop.responses.OrderResponse;
 import com.chronosx.cx_shop.services.OrderService;
 import com.chronosx.cx_shop.utils.MessageKeys;
@@ -82,5 +87,28 @@ public class OrderController {
         orderService.deleteOrder(id);
         return ResponseEntity.ok(
                 localizationUtils.getLocalizedMessage(MessageKeys.DELETE_ORDER_SUCCESSFULLY.getKey(), id));
+    }
+
+    @GetMapping("/get-orders-by-keyword")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<OrderListResponse> getOrdersByKeyword(
+            @RequestParam(defaultValue = "", required = false) String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int limit) {
+        PageRequest pageRequest = PageRequest.of(
+                page - 1,
+                limit,
+                //                        Sort.by("createdAt").descending()
+                Sort.by("id").ascending());
+
+        Page<OrderResponse> orderPage =
+                orderService.getOrdersByKeyword(keyword, pageRequest).map(OrderResponse::fromOrder);
+        int totalPages = orderPage.getTotalPages();
+        List<OrderResponse> orders = orderPage.getContent();
+
+        return ResponseEntity.ok(OrderListResponse.builder()
+                .orders(orders)
+                .totalPages(totalPages)
+                .build());
     }
 }
