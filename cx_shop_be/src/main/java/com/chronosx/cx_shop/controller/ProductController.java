@@ -159,9 +159,8 @@ public class ProductController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int limit) {
         PageRequest pageRequest = PageRequest.of(
-                page - 1,
-                limit,
-                //                        Sort.by("createdAt").descending()
+                page, limit,
+                // Sort.by("createdAt").descending()
                 Sort.by("id").ascending());
 
         Page<ProductResponse> productPage = productService.getAllProducts(keyword, categoryId, pageRequest);
