@@ -46,7 +46,7 @@ export class HomeComponent implements OnInit {
   }
 
   searchProducts() {
-    this.currentPage = 1;
+    this.currentPage = 0;
     this.itemsPerPage = 12;
     debugger
     this.getProducts(this.keyword, this.selectedCategoryId, this.currentPage, this.itemsPerPage);
@@ -54,7 +54,7 @@ export class HomeComponent implements OnInit {
 
   getProducts(keyword: string, selectedCategoryId: number, page: number, limit: number) {
     debugger;
-    this.productService.getProducts(keyword, selectedCategoryId, page, limit).subscribe({
+    this.productService.getProducts(keyword, selectedCategoryId, page-1, limit).subscribe({
       next: (response: any) => {
         debugger;
         response.products.forEach((product: Product) => {
