@@ -17,6 +17,9 @@ import { TokenInterceptor } from './interceptors/token.interceptor';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { AdminComponent } from './components/admin/admin.component';
+import { OrderAdminComponent } from './components/admin/order/order.admin.component';
+import { CategoryAdminComponent } from './components/admin/category/category.admin.component';
+import { ProductAdminComponent } from './components/admin/product/product.admin.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +34,9 @@ import { AdminComponent } from './components/admin/admin.component';
     RegisterComponent,
     UserProfileComponent,
     AdminComponent,
+    OrderAdminComponent,
+    CategoryAdminComponent,
+    ProductAdminComponent,
   ],
   imports: [
     BrowserModule,
