@@ -16,10 +16,10 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenInterceptor } from './interceptors/token.interceptor';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
-import { AdminComponent } from './components/admin/admin.component';
-import { OrderAdminComponent } from './components/admin/order/order.admin.component';
-import { CategoryAdminComponent } from './components/admin/category/category.admin.component';
-import { ProductAdminComponent } from './components/admin/product/product.admin.component';
+import { AdminModule } from './components/admin/admin.module';
+import { CommonModule } from '@angular/common';
+
+
 
 @NgModule({
   declarations: [
@@ -33,18 +33,16 @@ import { ProductAdminComponent } from './components/admin/product/product.admin.
     LoginComponent,
     RegisterComponent,
     UserProfileComponent,
-    AdminComponent,
-    OrderAdminComponent,
-    CategoryAdminComponent,
-    ProductAdminComponent,
   ],
   imports: [
+    CommonModule,
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
     ReactiveFormsModule,
-    NgbModule
+    NgbModule,
+    AdminModule,
   ],
   providers: [
     {

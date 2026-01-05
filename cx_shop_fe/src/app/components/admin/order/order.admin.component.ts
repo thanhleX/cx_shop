@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { OrderService } from '../../../services/order.service';
 import { environment } from '../../../environments/environment';
 import { OrderResponse } from '../../../responses/order/order.resposne';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-order-admin',
@@ -17,7 +18,7 @@ export class OrderAdminComponent implements OnInit {
   keyword: string = "";
   visiblePages: number[] = [];
 
-  constructor(private orderService: OrderService) { }
+  constructor(private orderService: OrderService, private router: Router) { }
 
   ngOnInit(): void {
     this.getAllOrders(this.keyword, this.currentPage, this.itemsPerPage);
@@ -40,6 +41,11 @@ export class OrderAdminComponent implements OnInit {
         console.error('Error fetching orders: ', err);
       }
     });
+  }
+
+  viewDetails(order: OrderResponse) {
+    debugger;
+    this.router.navigate(['/admin/orders', order.id]);
   }
 
   deleteOrder(orderId: number) {
