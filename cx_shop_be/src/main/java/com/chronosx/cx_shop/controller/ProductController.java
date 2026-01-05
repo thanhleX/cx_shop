@@ -11,6 +11,8 @@ import java.util.*;
 
 import jakarta.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -45,6 +47,8 @@ import lombok.experimental.FieldDefaults;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ProductController {
+
+    static Logger logger = LoggerFactory.getLogger(ProductController.class);
 
     ProductService productService;
 
@@ -158,6 +162,8 @@ public class ProductController {
             @RequestParam(defaultValue = "0", name = "category_id") Long categoryId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int limit) {
+        logger.info(String.format("keyword = %s, category_id = %s, page = %s, limit = %s",
+                keyword, categoryId, page, limit));
         PageRequest pageRequest = PageRequest.of(
                 page, limit,
                 // Sort.by("createdAt").descending()

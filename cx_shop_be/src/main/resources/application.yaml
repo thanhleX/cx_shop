@@ -27,3 +27,5 @@ api:
 jwt:
   expiration: 2592000 # 30 days
   secretKey: this_is_the_long_fucking_secret_key_used_in_jwt # 47 characters
+
+logging.level.org.springframework.web: DEBUG #comment in production

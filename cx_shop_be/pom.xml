@@ -71,7 +71,7 @@
             <version>1.0.2</version>
         </dependency>
 
-        <!--         chỉ sử dụng khi dự án bé, có ít entity, tương lại cần thay bằng mapstruct       -->
+        <!-- chỉ sử dụng khi dự án bé, có ít entity, tương lại cần thay bằng mapstruct -->
         <dependency>
             <groupId>org.modelmapper</groupId>
             <artifactId>modelmapper</artifactId>
@@ -97,6 +97,15 @@
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-jackson</artifactId>
             <version>${jwt.version}</version>
+        </dependency>
+        <!-- Logging with SLF4J and Logback-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
         </dependency>
     </dependencies>
 
